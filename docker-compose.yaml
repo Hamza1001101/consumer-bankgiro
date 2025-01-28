@@ -23,18 +23,24 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: transaction-database
+      #PGDATA: /var/libs/postgresql/data
     volumes:
       - db_data:/var/lib/postgresql/data
 
 
 #  pgadmin:
+#    container_name: mg_pgadmin
 #    image: dpage/pgadmin4:latest
 #    environment:
 #      PGADMIN_DEFAULT_EMAIL: admin@localhost.com
 #      PGADMIN_DEFAULT_PASSWORD: admin
 #      PGADMIN_LISTEN_PORT: 5050
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
 #    ports:
 #      - '5050:5050'
 
 volumes:
   db_data:
+  pgadmin:

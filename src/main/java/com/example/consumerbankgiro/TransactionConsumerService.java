@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,18 +14,18 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class TransactionConsumer {
+public class TransactionConsumerService {
 
     final JdbcClient jdbcClient;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(TransactionConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(TransactionConsumerService.class);
 
-    public TransactionConsumer(JdbcClient jdbcClient) {
+    public TransactionConsumerService(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
-    //@KafkaListener(topics = "transactions", groupId = "incoming-transactions")
+ //   @KafkaListener(topics = "some-transactions", groupId = "consumer-one")
     public void consumeTransaction(String message) {
         var mapper = new ObjectMapper();
         Transaction transaction;
@@ -42,7 +40,7 @@ public class TransactionConsumer {
     }
 
 
-    @Scheduled(cron = "*/5 * * * * *")
+    //@Scheduled(cron = "*/5 * * * * *")
     public void dummyTextProcessor() {
         Transaction transaction = generateRandomTransaction();
         saveTransaction(transaction);
@@ -84,4 +82,7 @@ public class TransactionConsumer {
         return new Transaction(UUID.randomUUID().toString(), senderAccount, receiverAccount, amount);
     }
 
+    public void save(Transaction transaction) {
+        saveTransaction(transaction);
+    }
 }

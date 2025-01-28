@@ -1,12 +1,9 @@
 package com.example.consumerbankgiro;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,9 +13,9 @@ import java.util.UUID;
 public class ConsumerTransactionController {
 
 
-    final TransactionConsumer service;
+    final TransactionConsumerService service;
 
-    public ConsumerTransactionController(TransactionConsumer service) {
+    public ConsumerTransactionController(TransactionConsumerService service) {
         this.service = service;
     }
 
@@ -30,8 +27,14 @@ public class ConsumerTransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> findById(@PathVariable UUID id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return service.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+    @PostMapping
+    public ResponseEntity<?> saveTransaction(@RequestBody  Transaction transaction) {
+        service.save(transaction);
+        return ResponseEntity.noContent().build();
+    }
+
 }
